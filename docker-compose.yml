@@ -20,10 +20,10 @@ services:
       - "--entrypoints.websecure-external.address=:8443"
       - "--entrypoints.web-internal.http.redirections.entryPoint.to=websecure-internal"
       - "--entrypoints.web-internal.http.redirections.entrypoint.scheme=https"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare"
-      - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/config/letsencrypt/acme.json"
+      - "--certificatesresolvers.cloudflare-dns.acme.dnschallenge=true"
+      - "--certificatesresolvers.cloudflare-dns.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.cloudflare-dns.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.cloudflare-dns.acme.storage=/config/letsencrypt/acme.json"
     environment:
       - TZ=${TZ}
       - CF_API_EMAIL=${CF_API_EMAIL}
@@ -35,7 +35,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.traefik.entrypoints=websecure-internal"
-      - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+      - "traefik.http.routers.traefik.tls.certresolver=cloudflare-dns"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
       - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_DASHBOARD_AUTH}"
       - "traefik.http.routers.traefik.middlewares=auth"
@@ -58,7 +58,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.${DOMAIN}`)"
       - "traefik.http.routers.jellyfin.entrypoints=websecure-internal"
-      - "traefik.http.routers.jellyfin.tls.certresolver=myresolver"
+      - "traefik.http.routers.jellyfin.tls.certresolver=cloudflare-dns"
     devices:
       - /dev/dri:/dev/dri
 
