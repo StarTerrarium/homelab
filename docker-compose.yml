@@ -51,14 +51,85 @@ services:
       - TZ=${TZ}
     volumes:
       - /speed/app-config/jellyfin:/config
-      - /bulk/media:/media
+      - /bulk/data/media:/data/media
     ports:
       - 8920:8920
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.${DOMAIN}`)"
-      - "traefik.http.routers.jellyfin.entrypoints=websecure-internal"
-      - "traefik.http.routers.jellyfin.tls.certresolver=cloudflare-dns"
+      - traefik.enable=true
+      - traefik.http.routers.jellyfin.rule=Host(`jellyfin.${DOMAIN}`)
+      - traefik.http.routers.jellyfin.entrypoints=websecure-internal
+      - traefik.http.routers.jellyfin.tls.certresolver=cloudflare-dns
     devices:
       - /dev/dri:/dev/dri
 
+  sabnzbd:
+    image: linuxserver/sabnzbd
+    container_name: sabnzbd
+    restart: unless-stopped
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+      - TZ=${TZ}
+    volumes:
+      - /speed/app-config/sabnzbd:/config
+      - /bulk/data/usenet:/data/usenet
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.${DOMAIN}`)
+      - traefik.http.routers.sabnzbd.entrypoints=websecure-internal
+      - traefik.http.routers.sabnzbd.tls.certresolver=cloudflare-dns
+
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    restart: unless-stopped
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+      - TZ=${TZ}
+      - TORRENTING_PORT=${TORRENT_PORT}
+    volumes:
+      - /speed/app-config/qbittorrent:/config
+      - /bulk/data/torrents:/data/torrents
+    ports:
+      - ${TORRENT_PORT}:${TORRENT_PORT}
+      - ${TORRENT_PORT}:${TORRENT_PORT}/udp
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.qbittorrent.rule=Host(`torrent.${DOMAIN}`)
+      - traefik.http.routers.qbittorrent.entrypoints=websecure-internal
+      - traefik.http.routers.qbittorrent.tls.certresolver=cloudflare-dns
+      - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
+
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+      - TZ=${TZ}
+    volumes:
+      - /speed/app-config/radarr:/config
+      - /bulk/data:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)
+      - traefik.http.routers.radarr.entrypoints=websecure-internal
+      - traefik.http.routers.radarr.tls.certresolver=cloudflare-dns
+
+  prowlarr:
+    image: linuxserver/prowlarr
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+      - TZ=${TZ}
+    volumes:
+      - /speed/app-config/prowlarr:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
+      - traefik.http.routers.prowlarr.entrypoints=websecure-internal
+      - traefik.http.routers.prowlarr.tls.certresolver=cloudflare-dns
