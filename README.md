@@ -4,21 +4,21 @@ My Homelab config & docs
 # About
 Mostly old desktop hardware.  Notably storage, case & GPU were bought specifically for server purposes.
 
-Case: SilverStone CS382
-CPU: Ryzen 7 1700
-CPU Cooler: Noctua NH-D12L
-GPU: Intel Arc A310
-RAM: 32GB DDR4 2666MHz (4x 8GB)
-Motherboard: Gigabyte B450M DS3H
-PSU: EVGA Supernova G2 750W
-HBA: LSI 9207-8i
-Disks:
+- Case: SilverStone CS382
+- CPU: Ryzen 7 1700
+- CPU Cooler: Noctua NH-D12L
+- GPU: Intel Arc A310
+- RAM: 32GB DDR4 2666MHz (4x 8GB)
+- Motherboard: Gigabyte B450M DS3H
+- PSU: EVGA Supernova G2 750W
+- HBA: LSI 9207-8i
+- Disks:
   - 1x 500GB Crucial P1 NVMe SSD
   - 2x 1TB Crucual MX500 Sata SSD
   - 2x 4TB Western Digital WD40EFRX HDD
   - 3x 18TB Western Digital WD180EDGZ HDD
   - 3x 18Tb Seagate ST18000NM000J HDD
-Host OS: OpenSUSE Leap 15.6
+- Host OS: OpenSUSE Leap 15.6
 
 ### Disk Setup
 There's a lot of disks in this machine, and this is how they are currently configured:
